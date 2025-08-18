@@ -1,17 +1,14 @@
-const express = require("express")
-// const dotenv = require("dotenv")
-// const morgan = require("morgan")
-// const connectDB = require('./config/db');
+const express = require("express");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
 // const authRoutes = require('./routes/authRoutes');
 // const projectRoutes = require('./routes/projectRoutes');
 
-// dotenv.config();
-// connectDB();
-
+dotenv.config();
 const app = express();
 
-// app.use(express.json());
-// app.user(morgan('env'));
+app.use(express.json());
+app.use(morgan('env'));
 
 // app.use('/api/auth', authRoutes);
 // app.use('/api/projects', projectRoutes);
