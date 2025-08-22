@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const morgan = require("morgan");
 const userRoutes = require("./routes/userRoutes");
 const sequelize = require("./config/database");
+const seedUsers = require("./utils/seedUsers");
 
 // Import models (register them with Sequelize)
 require("./models/User"); 
@@ -14,20 +15,18 @@ const app = express();
 app.use(express.json());
 app.use(morgan('env'));
 
-// Test DB connection
-sequelize.sync({ alter: true }) // or { force: true } if you want to drop & recreate tables
-  .then(() => {
-    console.log("Database synced successfully");
-    
-    // Start server
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("Unable to sync database:", err);
-  });
+// Sync DB and seed users
+(async () => {
+  try {
+    await sequelize.sync({ alter: true });
+    console.log("[Sequelize Sync] Database synced");
+
+    await seedUsers();
+    console.log("[Sequelize Seed] Created 10 dummy users");
+  } catch (error) {
+    console.error("[Sequelize Sync & Seed] Error syncing DB or seeding:", error);
+  }
+})();
 
 // Routes
 app.use("/api/users", userRoutes);
